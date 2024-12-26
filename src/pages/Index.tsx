@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Calendar, UserCog, Phone, Tooth, Clock, Shield } from "lucide-react";
+import { Calendar, UserCog, Phone, Stethoscope, Clock, Shield } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { NavigationMenu } from "@/components/ui/navigation-menu";
 
@@ -10,7 +10,7 @@ const Index = () => {
   const services = [
     {
       title: "فحص الأسنان",
-      icon: <Tooth className="w-12 h-12 text-dental-600" />,
+      icon: <Stethoscope className="w-12 h-12 text-dental-600" />,
       description: "فحص شامل لصحة الأسنان واللثة"
     },
     {
