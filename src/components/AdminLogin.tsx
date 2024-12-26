@@ -12,7 +12,7 @@ const AdminLogin = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === "شنونة" && password === "123") {
+    if (username === "شنونة" && password === "728022") {
       // In a real app, use proper authentication
       toast({
         title: "تم تسجيل الدخول بنجاح",
