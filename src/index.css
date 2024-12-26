@@ -84,3 +84,13 @@
 .hover-scale {
   @apply transition-transform duration-300 hover:scale-105;
 }
+
+/* Glass effect styles */
+.glass-morphism {
+  @apply bg-white/30 dark:bg-gray-800/30 backdrop-blur-md border border-white/20 dark:border-gray-700/20;
+}
+
+.neo-blur {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
