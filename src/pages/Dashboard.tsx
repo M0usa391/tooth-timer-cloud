@@ -11,14 +11,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
-import { Calendar, Users, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
+import { Calendar, Users, Clock, CheckCircle, XCircle, Archive, BadgeCheck, Sun, Moon } from "lucide-react";
 import { useAppointmentStore } from "@/store/appointmentStore";
 import { useToast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";  // Add this import
+import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 const Dashboard = () => {
   const { appointments, updateAppointmentStatus, deleteAppointment } = useAppointmentStore();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
 
   const handleStatusUpdate = (id: string, status: 'completed' | 'cancelled') => {
     updateAppointmentStatus(id, status);
@@ -38,11 +40,27 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto p-4 md:p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-center font-arabic mb-8">عيادة د. شنونة</h1>
-      
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-center font-arabic mb-8 text-dental-600 flex items-center gap-2">
+          عيادة د. شنونة
+          <BadgeCheck className="h-6 w-6 text-blue-500" />
+        </h1>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        >
+          {theme === "dark" ? (
+            <Sun className="h-5 w-5" />
+          ) : (
+            <Moon className="h-5 w-5" />
+          )}
+        </Button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <Card className="glass-card hover-scale">
-          <CardContent className="flex items-center justify-between p-6">
+        <Card className="glass-card hover-scale bg-[url('/photo-1581091226825-a6a2a5aee158')] bg-cover bg-center">
+          <CardContent className="flex items-center justify-between p-6 backdrop-blur-sm bg-white/30 dark:bg-gray-800/30">
             <div>
               <p className="text-sm font-medium font-arabic">إجمالي المواعيد</p>
               <p className="text-2xl font-bold">{appointments.length}</p>
@@ -51,8 +69,8 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="glass-card hover-scale">
-          <CardContent className="flex items-center justify-between p-6">
+        <Card className="glass-card hover-scale bg-[url('/photo-1485827404703-89b55fcc595e')] bg-cover bg-center">
+          <CardContent className="flex items-center justify-between p-6 backdrop-blur-sm bg-white/30 dark:bg-gray-800/30">
             <div>
               <p className="text-sm font-medium font-arabic">المرضى</p>
               <p className="text-2xl font-bold">{appointments.length}</p>
@@ -61,8 +79,8 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="glass-card hover-scale">
-          <CardContent className="flex items-center justify-between p-6">
+        <Card className="glass-card hover-scale bg-[url('/photo-1483058712412-4245e9b90334')] bg-cover bg-center">
+          <CardContent className="flex items-center justify-between p-6 backdrop-blur-sm bg-white/30 dark:bg-gray-800/30">
             <div>
               <p className="text-sm font-medium font-arabic">مواعيد اليوم</p>
               <p className="text-2xl font-bold">
@@ -75,8 +93,8 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="glass-card hover-scale">
-          <CardContent className="flex items-center justify-between p-6">
+        <Card className="glass-card hover-scale bg-[url('/photo-1498050108023-c5249f4df085')] bg-cover bg-center">
+          <CardContent className="flex items-center justify-between p-6 backdrop-blur-sm bg-white/30 dark:bg-gray-800/30">
             <div>
               <p className="text-sm font-medium font-arabic">مكتملة</p>
               <p className="text-2xl font-bold">
