@@ -14,6 +14,7 @@ import { ar } from "date-fns/locale";
 import { Calendar, Users, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
 import { useAppointmentStore } from "@/store/appointmentStore";
 import { useToast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";  // Add this import
 
 const Dashboard = () => {
   const { appointments, updateAppointmentStatus, deleteAppointment } = useAppointmentStore();
