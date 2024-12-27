@@ -10,6 +10,7 @@ import { ar } from "date-fns/locale";
 import { CalendarIcon, Phone, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
+import { useAppointmentStore } from "@/store/appointmentStore";
 
 const services = [
   { id: 1, name: "فحص عام" },
@@ -25,6 +26,7 @@ const AppointmentForm = () => {
   const [phone, setPhone] = useState("");
   const [service, setService] = useState("");
   const { toast } = useToast();
+  const addAppointment = useAppointmentStore((state) => state.addAppointment);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,15 +48,15 @@ const AppointmentForm = () => {
       date,
     };
 
-    // Send appointment to dashboard
-    window.postMessage(appointment, "*");
+    // إضافة الموعد إلى المخزن
+    addAppointment(appointment);
 
     toast({
       title: "تم الحجز بنجاح",
       description: "سيتم التواصل معك قريباً",
     });
 
-    // Reset form
+    // إعادة تعيين النموذج
     setName("");
     setPhone("");
     setService("");

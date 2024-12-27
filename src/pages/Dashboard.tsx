@@ -8,33 +8,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
-import { Calendar, Users, Clock, CheckCircle } from "lucide-react";
-
-interface Appointment {
-  id: string;
-  name: string;
-  phone: string;
-  service: string;
-  date: Date;
-}
+import { Calendar, Users, Clock, CheckCircle, XCircle, Archive } from "lucide-react";
+import { useAppointmentStore } from "@/store/appointmentStore";
+import { useToast } from "@/components/ui/use-toast";
 
 const Dashboard = () => {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const { appointments, updateAppointmentStatus, deleteAppointment } = useAppointmentStore();
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const handleNewAppointment = (event: MessageEvent) => {
-      const appointment = JSON.parse(event.data);
-      setAppointments(prev => [...prev, appointment]);
-    };
+  const handleStatusUpdate = (id: string, status: 'completed' | 'cancelled') => {
+    updateAppointmentStatus(id, status);
+    toast({
+      title: status === 'completed' ? "تم إكمال الموعد" : "تم إلغاء الموعد",
+      description: "تم تحديث حالة الموعد بنجاح",
+    });
+  };
 
-    window.addEventListener('message', handleNewAppointment);
-    
-    return () => {
-      window.removeEventListener('message', handleNewAppointment);
-    };
-  }, []);
+  const handleDelete = (id: string) => {
+    deleteAppointment(id);
+    toast({
+      title: "تم الحذف",
+      description: "تم حذف الموعد بنجاح",
+    });
+  };
 
   return (
     <div className="container mx-auto p-4 md:p-6 space-y-6">
@@ -79,7 +78,9 @@ const Dashboard = () => {
           <CardContent className="flex items-center justify-between p-6">
             <div>
               <p className="text-sm font-medium font-arabic">مكتملة</p>
-              <p className="text-2xl font-bold">0</p>
+              <p className="text-2xl font-bold">
+                {appointments.filter(a => a.status === 'completed').length}
+              </p>
             </div>
             <CheckCircle className="h-8 w-8 text-dental-600" />
           </CardContent>
@@ -99,6 +100,8 @@ const Dashboard = () => {
                   <TableHead className="text-right font-arabic">رقم الهاتف</TableHead>
                   <TableHead className="text-right font-arabic">الخدمة</TableHead>
                   <TableHead className="text-right font-arabic">التاريخ</TableHead>
+                  <TableHead className="text-right font-arabic">الحالة</TableHead>
+                  <TableHead className="text-right font-arabic">الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -109,6 +112,48 @@ const Dashboard = () => {
                     <TableCell className="font-arabic">{appointment.service}</TableCell>
                     <TableCell className="font-arabic">
                       {format(new Date(appointment.date), 'PPP', { locale: ar })}
+                    </TableCell>
+                    <TableCell className="font-arabic">
+                      <span className={cn(
+                        "px-2 py-1 rounded-full text-sm",
+                        {
+                          "bg-yellow-100 text-yellow-800": appointment.status === 'pending',
+                          "bg-green-100 text-green-800": appointment.status === 'completed',
+                          "bg-red-100 text-red-800": appointment.status === 'cancelled',
+                        }
+                      )}>
+                        {appointment.status === 'pending' && 'قيد الانتظار'}
+                        {appointment.status === 'completed' && 'مكتمل'}
+                        {appointment.status === 'cancelled' && 'ملغي'}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleStatusUpdate(appointment.id, 'completed')}
+                          className="text-green-600 hover:text-green-700"
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleStatusUpdate(appointment.id, 'cancelled')}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <XCircle className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(appointment.id)}
+                          className="text-gray-600 hover:text-gray-700"
+                        >
+                          <Archive className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
