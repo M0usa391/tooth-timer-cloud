@@ -10,6 +10,12 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    sourcemap: false,
+    minify: true,
+  },
   plugins: [
     react(), // استخدام plugin-react العادي بدلاً من plugin-react-swc
     mode === 'development' &&
